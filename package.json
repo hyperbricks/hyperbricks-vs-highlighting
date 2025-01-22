@@ -1,0 +1,292 @@
+{
+	"name": "hyperbricks",
+	"main": "./out/extension.js",
+	"displayName": "hyperbricks",
+	"description": "Provides syntax highlighting and support for hyperbricks, a Domain-Specific Language for Hyperbricks CMS",
+	"version": "0.0.1",
+	"publisher": "Robbert Streng",
+	"engines": {
+		"vscode": "^1.95.0"
+	},
+	"keywords": [
+		"hyperbricks",
+		"syntax highlighting",
+		"language support"
+	],
+	"categories": [
+		"Programming Languages"
+	],
+	"license": "MIT",
+	"icon": "images/icon.png",
+	"contributes": {
+		"configurationDefaults": {
+			"editor.tokenColorCustomizations": {
+				"textMateRules": [
+					{
+						"scope": "source.hyperbricks.comment",
+						"settings": {
+							"foreground": "#6A9955"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.pre.equal.assignment.variable.key",
+						"settings": {
+							"foreground": "#2adb94"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.pre.equal.assignment.variable.dollar",
+						"settings": {
+							"foreground": "#db8b2a"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.pre.nested.assignment.key",
+						"settings": {
+							"foreground": "#0f98e2"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.pre.equal.assignment.key",
+						"settings": {
+							"foreground": "#9CDCFE"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.post.equal.assignment.sign",
+						"settings": {
+							"foreground": "#944f00"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.post.equal.assignment.multiline.contents",
+						"settings": {
+							"foreground": "#CE9178"
+						}
+					},
+					{
+						"scope": "text.html.basic",
+						"settings": {
+							"foreground": "#569CD6"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.multiline.template",
+						"settings": {
+							"foreground": "#77c34e"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.multiline.template.html.comment",
+						"settings": {
+							"foreground": "#57A64A"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.multiline.template.values",
+						"settings": {
+							"foreground": "#D7BA7D"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.string.quoted.double",
+						"settings": {
+							"foreground": "#CE9178"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.string.quoted.double.escape",
+						"settings": {
+							"foreground": "#D16969"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.string.quoted.single",
+						"settings": {
+							"foreground": "#CE9178"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.string.quoted.single.escape",
+						"settings": {
+							"foreground": "#D16969"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.import",
+						"settings": {
+							"foreground": "#4EC9B0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.import.begin",
+						"settings": {
+							"foreground": "#C586C0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.import.end",
+						"settings": {
+							"foreground": "#C586C0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.constant",
+						"settings": {
+							"foreground": "#4EC9B0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references",
+						"settings": {
+							"foreground": "#DCDCAA"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.capture.opening",
+						"settings": {
+							"foreground": "#9CDCFE"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.capture.closing",
+						"settings": {
+							"foreground": "#9CDCFE"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.template",
+						"settings": {
+							"foreground": "#df7924"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.variable",
+						"settings": {
+							"foreground": "#4EC9B0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.file",
+						"settings": {
+							"foreground": "#ef0fdc"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.separator",
+						"settings": {
+							"foreground": "#D4D4D4"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.external.references.filename",
+						"settings": {
+							"foreground": "#9CDCFE"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.keywords.renderer",
+						"settings": {
+							"foreground": "#d5aa4e"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.keywords.data",
+						"settings": {
+							"foreground": "#569CD6"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.keywords.resources",
+						"settings": {
+							"foreground": "#C586C0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.keywords.menu",
+						"settings": {
+							"foreground": "#D7BA7D"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.keywords.components",
+						"settings": {
+							"foreground": "#87d45d"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.inheritance.block.key",
+						"settings": {
+							"foreground": "#4EC9B0"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.inheritance.block.inherited",
+						"settings": {
+							"foreground": "#9CDCFE"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.inheritance.block",
+						"settings": {
+							"foreground": "#D4D4D4"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.inheritance.inherited",
+						"settings": {
+							"foreground": "#D16969"
+						}
+					},
+					{
+						"scope": "source.hyperbricks.inheritance",
+						"settings": {
+							"foreground": "#C586C0"
+						}
+					}
+				]
+			}
+		},
+		"languages": [
+			{
+				"id": "hyperbricks",
+				"aliases": [
+					"hyperbricks",
+					"hyperbricks"
+				],
+				"extensions": [
+					".hyperbricks",
+					".hs"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "hyperbricks",
+				"scopeName": "source.hyperbricks",
+				"path": "./syntaxes/hyperbricks.tmLanguage.json"
+			}
+		],
+		"themes": [
+			{
+				"label": "hyperbricks Theme",
+				"uiTheme": "vs-dark",
+				"path": "./themes/hyperbricks-theme.json"
+			}
+		]
+	},
+	"scripts": {
+		"compile": "tsc -p ./",
+		"postinstall": "download some stuff if needed"
+	},
+	"devDependencies": {
+		"@types/node": "^22.10.2",
+		"@types/vscode": "^1.96.0",
+		"typescript": "^4.9.5",
+		"vscode": "^1.1.37"
+	},
+	"__metadata": {
+		"size": 167426
+	}
+}

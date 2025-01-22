@@ -1,0 +1,267 @@
+{
+    "scopeName": "source.hyperbricks",
+    "patterns": [
+        
+        {
+            "include": "#hyperbricks_pre_equal" 
+        },
+        {
+            "include": "#hyperbricks_constants" 
+        },
+        {
+            "include": "#hyperbricks_string" 
+        },
+        {
+            "include": "#hyperbricks_import"
+        },
+        {
+            "include": "#hyperbricks_types"
+        },
+        {
+            "include": "#hyperbricks_inheritance"
+        },
+        {
+            "include": "#hyperbricks_inheritance_block"
+        },
+        {
+            "include": "#hyperbricks_post_equal"
+        },
+        {
+            "include": "#hyperbricks_multiline_template"
+        },
+        {
+            "include": "#hyperbricks_comments"
+        },
+        {
+            "include": "#external_references"
+        }
+    ],
+    "repository": {
+        "hyperbricks_comments": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.comment",
+                    "match": "#.*$"
+                }
+            ]
+        },
+        "hyperbricks_pre_equal": {
+            "patterns": [
+                {
+                    "comment": "Highlight $-prefixed variables before = or {",
+                    "match": "(\\$)(\\w+)(?=\\s*=|\\s*\\{)",
+                    "name": "source.hyperbricks.pre.equal.assignment.variable.key",
+                    "captures": {
+                        "2": "source.hyperbricks.pre.equal.assignment.variable.key"
+                    }
+                },
+                {
+                    "comment": "Highlight $-prefixed variables before = or {",
+                    "match": "(\\$)(\\w+)(?=\\s*=|\\s*\\{)",
+                    "name": "source.hyperbricks.pre.equal.assignment.variable.dollar",
+                    "captures": {
+                        "1": "source.hyperbricks.pre.equal.assignment.variable.dollar"
+                      
+                    }
+                },
+                {
+                    "comment": "Highlight keys before =",
+                    "match": "\\b[\\w\\.]+(?=\\s*=)",
+                    "name": "source.hyperbricks.pre.equal.assignment.key"
+                },
+                {
+                    "comment": "Highlight keys before {",
+                    "match": "\\b[\\w\\.]+(?=\\s*\\{)",
+                    "name": "source.hyperbricks.pre.nested.assignment.key"
+                }
+            ]
+        },
+        "hyperbricks_post_equal": {
+            "begin": "(=)(\\s?)",
+            "captures": {
+                "1": {
+                    "name": "source.hyperbricks.post.equal.assignment.sign"
+                }
+            },
+            "end": "(?=<<\\[|\\n|$)",
+            "name": "source.hyperbricks.post.equal.assignment.multiline.contents",
+            "patterns": [
+                
+                {
+                    "include": "#hyperbricks_external_references"
+                },
+                {
+                    "include": "#hyperbricks_types"
+                },
+                {
+                    "include": "text.html.basic"
+                }
+            ]
+        },
+        "hyperbricks_multiline_template": {
+            "name": "source.hyperbricks.multiline.template",
+            "begin": "(?<!\\S)<<\\[",
+            "end": "\\]>>(?!\\S)",
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.multiline.template.html.comment",
+                    "begin": "<!--",
+                    "end": "-->",
+                    "patterns": []
+                },
+                {
+                    "include": "text.html.basic"
+                },
+                {
+                    "name": "source.hyperbricks.multiline.template.values",
+                    "match": "\\{\\{\\w+\\}\\}"
+                }
+            ]
+        },
+        "hyperbricks_string": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.string.quoted.double",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "source.hyperbricks.string.quoted.double.escape",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "source.hyperbricks.string.quoted.single",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": [
+                        {
+                            "name": "source.hyperbricks.string.quoted.single.escape",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "hyperbricks_import": {
+            "name": "source.hyperbricks.import",
+            "begin": "^\\s*@import\\b",
+            "beginCaptures": {
+                "0": {
+                    "name": "source.hyperbricks.import.begin"
+                }
+            },
+            "end": "\\s*(?=;|$)",
+            "endCaptures": {
+                "0": {
+                    "name": "source.hyperbricks.import.end"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#hyperbricks_string"
+                }
+            ]
+        },
+        "hyperbricks_constants": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.constants",
+                    "match": "\\{\\$.*\\}"
+                }
+            ]
+        },
+        "hyperbricks_external_references": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.external.references",
+                    "begin": "\\{\\{",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "source.hyperbricks.external.references.capture.opening"
+                        }
+                    },
+                    "end": "\\}\\}",
+                    "endCaptures": {
+                        "0": {
+                            "name": "source.hyperbricks.external.references.capture.closing"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "name": "source.hyperbricks.external.references.template",
+                            "match": "\\b(TEMPLATE)\\b"
+                        },
+                        {
+                            "name": "source.hyperbricks.external.references.variable",
+                            "match": "\\b(VAR)\\b"
+                        },
+                        {
+                            "name": "source.hyperbricks.external.references.file",
+                            "match": "\\b(FILE)\\b"
+                        },
+                        {
+                            "name": "source.hyperbricks.external.references.separator",
+                            "match": ":"
+                        },
+                        {
+                            "name": "source.hyperbricks.external.references.filename",
+                            "match": "[\\w\\.\\-]+\\.\\w+"
+                        }
+                    ]
+                }
+            ]
+        },
+        "hyperbricks_types": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.keywords.data",
+                    "match": "<(API|MODEL|QUERY|JSON|XML|RSS_FEED)>"
+                },
+                {
+                    "name": "source.hyperbricks.keywords.resources",
+                    "match": "<(STYLES|FAVICON|JAVASCRIPT|IMAGE|IMAGES)>"
+                },
+                {
+                    "name": "source.hyperbricks.keywords.menu",
+                    "match": "<(MENU)>"
+                },
+                {
+                    "name": "source.hyperbricks.keywords.components",
+                    "match": "<(TEXT|HTML|MARKDOWN|LINK|HEADER|TABLE|PLUGIN)>"
+                },
+                {
+                    "name": "source.hyperbricks.keywords.renderer",
+                    "match": "<(HX_API|TREE|HYPERMEDIA|FRAGMENT|WEBPAGE|CSS|PAGE|RENDER|HEAD|TEMPLATE)>"
+                }
+            ]
+        },
+        "hyperbricks_inheritance_block": {
+            "comment": "Inheritance within blocks (key < inherited)",
+            "match": "\\b([\\w\\.]+)\\s*<\\s*([\\w\\.]+)\\b",
+            "captures": {
+                "1": {
+                    "name": "source.hyperbricks.inheritance.block.key"
+                },
+                "2": {
+                    "name": "source.hyperbricks.inheritance.block.inherited"
+                }
+            },
+            "name": "source.hyperbricks.inheritance.block"
+        },
+        "hyperbricks_inheritance": {
+            "patterns": [
+                {
+                    "comment": "Highlight inherited object <",
+                    "match": "<\\s*(\\w+)",
+                    "captures": {
+                        "1": {
+                            "name": "source.hyperbricks.inheritance.inherited"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

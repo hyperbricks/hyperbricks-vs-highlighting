@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "hyperbricks Configuration Schema",
+  "type": "object",
+  "properties": {
+    "myobject": {
+      "type": "object",
+      "properties": {
+        "hx_endpoint": {
+          "type": "string",
+          "description": "The slug (URL-friendly identifier) for the endpoint",
+          "example": "users/test"
+        },
+        "hx_query": {
+          "type": "string",
+          "description": "a query",
+          "example": "<QUERY>"
+        },
+        "hx_query.create.fields": {
+          "type": "string",
+          "description": "This maps the question marks in the query from fromdata in order of the marks.",
+          "example": "[field1,field2,field2]"
+        },
+        "hx_query.create.sql": {
+          "type": "string",
+          "description": "This maps the question marks in the query from fromdata in order of the marks.",
+          "example": "<<[\n\t\t\tINSERT INTO users (name, email)\n\t\t\tSELECT ?, ?\n\t\t\tWHERE NOT EXISTS (\n\t\t\tSELECT 1 FROM users WHERE email = ?\n\t\t\t)\n\t\t\t]>>"
+        },
+        "hx_method": {
+          "type": "string",
+          "description": "The HTTP method used for the request",
+          "enum": ["GET", "POST", "PUT", "DELETE"]
+        },
+        "hx_boosted": {
+          "type": "string",
+          "description": "Indicates that the request is via an element using hx_boost",
+          "example": "true"
+        },
+        "hx_current_url": {
+          "type": "string",
+          "description": "The current URL of the browser",
+          "format": "uri"
+        },
+        "hx_history_restore_request": {
+          "type": "string",
+          "description": "True if the request is for history restoration after a miss in the local history cache",
+          "enum": ["true", "false"] 
+        },
+        "hx_prompt": {
+          "type": "string",
+          "description": "The user response to an hx_prompt",
+          "example": "User confirmation"
+        },
+        "hx_request": {
+          "type": "string",
+          "description": "Always true",
+          "enum": ["true"]  
+        },
+        "hx_target": {
+          "type": "string",
+          "description": "The ID of the target element if it exists",
+          "example": "target-element-id"
+        },
+        "hx_trigger_name": {
+          "type": "string",
+          "description": "The name of the triggered element if it exists",
+          "example": "trigger-element-name"
+        },
+        "hx_trigger": {
+          "type": "string",
+          "description": "The ID of the triggered element if it exists",
+          "example": "trigger-element-id"
+        }
+      },
+      "required": ["hx_endpoint", "hx_method"],
+      "additionalProperties": false  
+    }
+  },
+  "required": ["myobject"],
+  "additionalProperties": false,
+  "customSuggestions": [
+    {
+      "trigger": ["= <", "="],
+      "suggestions": ["HYPERMEDIA", "TREE"],
+      "description": "Provides Hyperbricks types"
+    }
+  ]
+}

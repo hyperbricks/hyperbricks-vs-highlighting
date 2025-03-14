@@ -1,0 +1,125 @@
+hypermedia = <HYPERMEDIA>
+hypermedia.route = index
+hypermedia.title = Quote Generator
+hypermedia.bodytag = <body class="flex flex-col items-center justify-center h-screen bg-gray-100">|</body>
+
+hypermedia.head {
+    
+    100 = <HTML>
+    100.value = <<[
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    ]>>
+
+    100 = <CSS>
+    100.inline = <<[
+        body {
+            background:#ffffff;
+        }
+        p {
+            border-style: solid;
+            padding:10px;
+            margin:10px;
+        }
+        
+        p.none {border-top-style: none;}
+        p.dotted {border-top-style: dotted;}
+        p.dashed {border-top-style: dashed;}
+        p.solid {border-top-style: solid;}
+        p.double {border-top-style: double;}
+        p.groove {border-top-style: groove;}
+        p.ridge {border-top-style: ridge;}
+        p.inset {border-top-style: inset;}
+        p.outset {border-top-style: outset;}
+     ]>>
+
+    120 = <JAVASCRIPT>
+    120.inline = <<[
+        let lastIndex = null;
+
+        function getNextRandomIndex(range) {
+            let i;
+            do {
+                i = Math.floor(Math.random() * range);
+            } while (i === lastIndex); // Ensure it's different from the last one
+
+            lastIndex = i; // Store last used index
+            return i;
+        }
+        function rerer() {
+            for(var x=1;x<10;x++)
+        }
+        
+        function refreshBackground() {
+            const container = document.querySelector('.fade-in-background');
+            const newUrl = "https://picsum.photos/1920/1080?random=" + new Date().getTime();
+            // Remove the current animation
+            container.style.animation = 'none';
+
+            // Force a reflow to reset the animation state
+            void container.offsetHeight; // or container.getBoundingClientRect();
+
+            // Reapply the animation
+            container.style.animation = "fadeInBackground 2s ease-in-out forwards";
+
+            // Update the background image with a cache-busting parameter if needed
+            container.style.backgroundImage = "url('" + newUrl + "?t=" + Date.now() + "')";
+        }
+        function myCustomEvent(range = 5) {
+            const i = getNextRandomIndex(range);
+            htmx.ajax('GET', `/get-quote?id=${i}`, {
+                target: "#quote-box",  // Only updates #quote-box
+                swap: "innerHTML"      // Prevents removing the element
+            });
+
+            refreshBackground()
+        }
+
+
+     ]>>
+
+}
+hypermedia.10 = <TEMPLATE>
+hypermedia.10 {
+    inline = <<[
+        <!-- asdfsdda -->
+        <div class="bg-white p-6 rounded-lg shadow-md text-center max-w-md">
+            <blockquote id="quoteText" class="text-xl font-semibold italic text-gray-700">{{quote}}</blockquote>
+            <p id="quoteAuthor" class="mt-4 text-gray-600">- {{author}}</p>
+            <button class="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" 
+                hx-get="/newquote.html" hx-target="#quoteContainer" hx-swap="outerHTML">
+                Get New Quote
+            </button>
+        </div>
+    ]>>
+    values {
+        quote = "The only limit to our realization of tomorrow is our doubts of today."
+        author = "Franklin D. Roosevelt"
+    }
+}
+
+fragment = <FRAGMENT>
+x = <HYPERMEDIA>
+
+
+fragment.route = newquote.html
+fragment {
+    template {
+
+        inline = <<[
+            <div id="quoteContainer">
+                <blockquote class="text-xl font-semibold italic text-gray-700">{{quote}}</blockquote>
+                <p class="mt-4 text-gray-600">- {{author}}</p>
+            </div>
+        ]>>
+
+        values {
+            quote = "In the middle of every difficulty lies opportunity."
+            author = "Albert Einstein"
+        }
+    }
+    response {
+        hx_target = quoteContainer
+    }
+}

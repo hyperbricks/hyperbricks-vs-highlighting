@@ -274,6 +274,12 @@
 				"uiTheme": "vs-dark",
 				"path": "./themes/hyperbricks-theme.json"
 			}
+		],
+		"completionItemProvider": [
+			{
+			"language": "hyperbricks",
+			"triggerCharacters": ["<", "=", "{", "$", "@"]
+			}
 		]
 	},
 	"scripts": {

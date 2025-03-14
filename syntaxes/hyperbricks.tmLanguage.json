@@ -1,15 +1,17 @@
 {
     "scopeName": "source.hyperbricks",
     "patterns": [
-        
         {
-            "include": "#hyperbricks_pre_equal" 
+            "include": "#hyperbricks_pre_equal"
         },
         {
-            "include": "#hyperbricks_constants" 
+            "include": "#hyperbricks_constants"
         },
         {
-            "include": "#hyperbricks_string" 
+            "include": "#hyperbricks_keywords"
+        },
+        {
+            "include": "#hyperbricks_string"
         },
         {
             "include": "#hyperbricks_import"
@@ -27,13 +29,16 @@
             "include": "#hyperbricks_post_equal"
         },
         {
-            "include": "#hyperbricks_multiline_template"
-        },
-        {
             "include": "#hyperbricks_comments"
         },
         {
             "include": "#external_references"
+        },
+        {
+            "include": "#hyperbricks_multiline_template_js"
+        },
+        {
+            "include": "#hyperbricks_multiline_template"
         }
     ],
     "repository": {
@@ -61,7 +66,6 @@
                     "name": "source.hyperbricks.pre.equal.assignment.variable.dollar",
                     "captures": {
                         "1": "source.hyperbricks.pre.equal.assignment.variable.dollar"
-                      
                     }
                 },
                 {
@@ -86,7 +90,6 @@
             "end": "(?=<<\\[|\\n|$)",
             "name": "source.hyperbricks.post.equal.assignment.multiline.contents",
             "patterns": [
-                
                 {
                     "include": "#hyperbricks_external_references"
                 },
@@ -98,8 +101,89 @@
                 }
             ]
         },
+        "hyperbricks_multiline_template_css": {
+            "patterns": [
+                {
+                    "comment": "Detect lines with '= <CSS>' but do NOT color them.",
+                    "begin": "^\\s*([A-Za-z0-9_\\.]+)(\\s*=\\s*)(<CSS>)\\s*$",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "source.hyperbricks.pre.equal.assignment.key"
+                        },
+                        "2": {
+                            "name": "source.hyperbricks.post.equal.assignment.sign"
+                        },
+                        "3": {
+                            "name": "source.hyperbricks.keywords.resources"
+                        }
+                    },
+                    "end": "(?=^\\s*([A-Za-z0-9_\\.]+\\s*\\.inline\\s*)(=\\s*)<<\\[)",
+                    "patterns": []
+                },
+                {
+                    "name": "meta.hyperbricks.cssinline",
+                    "begin": "^\\s*([A-Za-z0-9_\\.]+\\s*\\.inline)(\\s*=\\s*)<<\\[",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "source.hyperbricks.pre.equal.assignment.key"
+                        },
+                        "2": {
+                            "name": "source.hyperbricks.post.equal.assignment.sign"
+                        }
+                    },
+                    "end": "\\]>>",
+                    "contentName": "source.css",
+                    "patterns": [
+                        {
+                            "include": "source.css"
+                        }
+                    ]
+                }
+            ]
+        },
+        "hyperbricks_multiline_template_js": {
+            "patterns": [
+                {
+                    "comment": "Detect lines with '= <JAVASCRIPT>' but do NOT color them.",
+                    "begin": "^\\s*([A-Za-z0-9_\\.]+)(\\s*=\\s*)(<JAVASCRIPT>)\\s*$",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "source.hyperbricks.pre.equal.assignment.key"
+                        },
+                        "2": {
+                            "name": "source.hyperbricks.post.equal.assignment.sign"
+                        },
+                        "3": {
+                            "name": "source.hyperbricks.keywords.resources"
+                        }
+                    },
+                    "end": "(?=^\\s*([A-Za-z0-9_\\.]+\\s*\\.inline\\s*)(=\\s*)<<\\[)",
+                    "patterns": []
+                },
+                {
+                    "name": "meta.hyperbricks.jsinline",
+                    "begin": "^\\s*([A-Za-z0-9_\\.]+\\s*\\.inline)(\\s*=\\s*)<<\\[",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "source.hyperbricks.pre.equal.assignment.key"
+                        },
+                        "2": {
+                            "name": "source.hyperbricks.post.equal.assignment.sign"
+                        }
+                    },
+                    "end": "\\]>>",
+                    "contentName": "source.js",
+                    "patterns": [
+                        {
+                            "include": "source.js"
+                        }
+                    ]
+                }
+            ]
+        },
         "hyperbricks_multiline_template": {
             "name": "source.hyperbricks.multiline.template",
+            "include": "text.html.basic",
             "begin": "(?<!\\S)<<\\[",
             "end": "\\]>>(?!\\S)",
             "patterns": [
@@ -217,11 +301,11 @@
             "patterns": [
                 {
                     "name": "source.hyperbricks.keywords.data",
-                    "match": "<(API|MODEL|QUERY|JSON|XML|RSS_FEED)>"
+                    "match": "<(API_RENDER|JSON|XML|RSS_FEED)>"
                 },
                 {
                     "name": "source.hyperbricks.keywords.resources",
-                    "match": "<(STYLES|FAVICON|JAVASCRIPT|IMAGE|IMAGES)>"
+                    "match": "<(STYLES|FAVICON|JAVASCRIPT|IMAGE|CSS|IMAGES)>"
                 },
                 {
                     "name": "source.hyperbricks.keywords.menu",
@@ -233,7 +317,7 @@
                 },
                 {
                     "name": "source.hyperbricks.keywords.renderer",
-                    "match": "<(HX_API|TREE|HYPERMEDIA|FRAGMENT|WEBPAGE|CSS|PAGE|RENDER|HEAD|TEMPLATE)>"
+                    "match": "<(API_FRAGMENT_RENDER|TREE|HYPERMEDIA|FRAGMENT|WEBPAGE|PAGE|RENDER|HEAD|TEMPLATE)>"
                 }
             ]
         },
@@ -260,6 +344,14 @@
                             "name": "source.hyperbricks.inheritance.inherited"
                         }
                     }
+                }
+            ]
+        },
+        "hyperbricks_keywords": {
+            "patterns": [
+                {
+                    "name": "source.hyperbricks.keyword",
+                    "match": "\b(route|title|section|bodytag|enclose|favicon|template|cache|nocache|static|index|doctype|htmltag|head|response|hx_location|hx_push_url|hx_redirect|hx_refresh|hx_replace_url|hx_reswap|hx_retarget|hx_reselect|hx_trigger|hx_trigger_after_settle|hx_trigger_after_swap)\b"
                 }
             ]
         }

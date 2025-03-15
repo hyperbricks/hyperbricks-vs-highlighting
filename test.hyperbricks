@@ -1,7 +1,3 @@
-
-xxx = <CSS>
-
-
 hypermedia.route = index
 
 hypermedia.title = Quote Generator

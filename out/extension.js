@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
+const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 function activate(context) {
     // Define HyperBricks types with descriptions
     const hyperbricksTypes = [
@@ -65,12 +66,10 @@ function activate(context) {
             { label: "enclose", detail: "Hypermedia enclosure property.", documentation: "Defines the enclosing property for the hypermedia." },
             { label: "favicon", detail: "Favicon path.", documentation: "Specifies the path to the favicon for the hypermedia." },
             { label: "template", detail: "Template configuration.", documentation: "Specifies the template configurations used for rendering the hypermedia." },
-            { label: "isstatic", detail: "Is static flag.", documentation: "Indicates whether the hypermedia is static or dynamically rendered." },
             { label: "cache", detail: "Cache expiration.", documentation: "Defines the cache expiration string for hypermedia caching." },
             { label: "nocache", detail: "Disable caching.", documentation: "Explicitly disables caching for this hypermedia." },
             { label: "static", detail: "Static file path.", documentation: "Specifies the path of a static file associated with the hypermedia." },
             { label: "index", detail: "Hypermedia index.", documentation: "Defines the sort order index for menu section rendering." },
-            { label: "doctype", detail: "HTML Doctype.", documentation: "Specifies an alternative Doctype for the HTML document." },
             { label: "htmltag", detail: "Opening HTML tag.", documentation: "Defines the opening HTML tag with attributes." },
             { label: "head", detail: "Head section configuration.", documentation: "Defines configurations for the head section of the hypermedia." },
         ],
@@ -118,7 +117,6 @@ function activate(context) {
             { label: "jwtclaims", detail: "JWT claims mapping.", documentation: "Defines key-value mappings for JWT claims." },
             { label: "debug", detail: "Enables debugging.", documentation: "Turns on debug mode for troubleshooting API rendering." },
             { label: "debugpanel", detail: "Enables frontend debug panel.", documentation: "Adds a frontend panel for debugging, available when frontend errors are enabled." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -129,7 +127,6 @@ function activate(context) {
             { label: "enclose", detail: "Enclosure property.", documentation: "Defines the wrapping property for the fragment's rendered output." },
             { label: "nocache", detail: "Disable caching.", documentation: "Explicitly disables caching for this fragment." },
             { label: "index", detail: "Fragment index.", documentation: "Defines the sort order index for menu section rendering." },
-            // API Request Configuration
             { label: "endpoint", detail: "API endpoint.", documentation: "Specifies the API endpoint URL." },
             { label: "method", detail: "HTTP method.", documentation: "Defines the HTTP method to use (GET, POST, PUT, DELETE, etc.)." },
             { label: "headers", detail: "Request headers.", documentation: "Defines optional HTTP headers for the API request." },
@@ -151,24 +148,13 @@ function activate(context) {
         "HTML": [
             { label: "value", detail: "Raw HTML content.", documentation: "Specifies the raw HTML content to be rendered." },
             { label: "trimspace", detail: "Trim whitespace.", documentation: "Removes leading and trailing whitespace as defined by Unicode." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
         "TEXT": [
             { label: "value", detail: "Paragraph content.", documentation: "Specifies the textual content of the paragraph." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
-        ],
-        "JSON": [
-            { label: "attributes", detail: "Extra attributes.", documentation: "Specifies additional attributes to customize JSON rendering." },
-            { label: "enclose", detail: "Encloses JSON output.", documentation: "Wraps the rendered JSON in a specified HTML element." },
-            { label: "file", detail: "JSON file path.", documentation: "Specifies the path to an external JSON file." },
-            { label: "template", detail: "Template for JSON rendering.", documentation: "Defines a template to format the JSON data." },
-            { label: "inline", detail: "Inline JSON content.", documentation: "Provides inline JSON or a template snippet." },
-            { label: "values", detail: "Key-value pairs.", documentation: "Data values to be used when rendering the JSON template." },
-            { label: "debug", detail: "Enables debug mode.", documentation: "Turns on debug mode to help troubleshoot JSON rendering issues." }
         ],
         "MENU": [
             { label: "section", detail: "Menu section.", documentation: "Specifies the section of the menu to display." },
@@ -177,7 +163,6 @@ function activate(context) {
             { label: "active", detail: "Active menu item template.", documentation: "Defines the template for the active menu item." },
             { label: "item", detail: "Regular menu item template.", documentation: "Defines the template for regular menu items." },
             { label: "enclose", detail: "Menu enclosure template.", documentation: "Specifies a template to enclose menu items." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -185,7 +170,6 @@ function activate(context) {
             { label: "inline", detail: "Inline CSS content.", documentation: "Specifies inline CSS styles." },
             { label: "link", detail: "CSS link tag.", documentation: "Specifies an external CSS link tag." },
             { label: "file", detail: "CSS file path.", documentation: "Specifies the path to an external CSS file. Overrides link and inline if provided." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -200,7 +184,6 @@ function activate(context) {
             { label: "quality", detail: "Image quality.", documentation: "Defines image quality for optimization." },
             { label: "loading", detail: "Loading strategy.", documentation: "Specifies the lazy loading strategy (e.g., 'lazy', 'eager')." },
             { label: "is_static", detail: "Static image flag.", documentation: "Indicates whether the image is static or dynamic." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -215,7 +198,6 @@ function activate(context) {
             { label: "title", detail: "Image title attribute.", documentation: "Specifies a title for each image." },
             { label: "quality", detail: "Image quality.", documentation: "Defines image quality for optimization." },
             { label: "loading", detail: "Loading strategy.", documentation: "Specifies the lazy loading strategy (e.g., 'lazy', 'eager')." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -223,7 +205,6 @@ function activate(context) {
             { label: "inline", detail: "Inline JavaScript content.", documentation: "Defines JavaScript code directly within a script tag." },
             { label: "link", detail: "JavaScript external link.", documentation: "Specifies a script tag with a `src` attribute pointing to an external JavaScript file." },
             { label: "file", detail: "JavaScript file path.", documentation: "Loads the content of a JavaScript file and renders it inside a script tag. Overrides link and inline if provided." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -233,7 +214,6 @@ function activate(context) {
             { label: "inline", detail: "Inline template definition.", documentation: "Defines a template using a multiline block." },
             { label: "values", detail: "Template key-value pairs.", documentation: "Specifies key-value pairs for template rendering." },
             { label: "debug", detail: "Enable debugging.", documentation: "Turns on debug mode for troubleshooting JSON rendering." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -241,7 +221,6 @@ function activate(context) {
             { label: "plugin", detail: "Plugin name.", documentation: "Specifies the name of the plugin for lookup." },
             { label: "classes", detail: "CSS classes.", documentation: "Defines optional CSS classes for styling the plugin link." },
             { label: "data", detail: "Plugin data attributes.", documentation: "Defines key-value pairs for additional plugin data." },
-            // ComponentRendererConfig fields (Feature Requests)
             { label: "attributes", detail: "Extra attributes for rendering.", documentation: "Additional attributes such as id, data-role, and data-action." },
             { label: "enclose", detail: "HTML element enclosure.", documentation: "Specifies the enclosing HTML element for headers, separated by '|'" }
         ],
@@ -257,6 +236,7 @@ function activate(context) {
     let assignedTypes = {};
     let propertyCompletionProvider = vscode.languages.registerCompletionItemProvider("hyperbricks", {
         provideCompletionItems(document, position) {
+            const lines = document.getText().split("\n");
             const currentLine = document.lineAt(position).text;
             // Updated regex: optionally match a trailing dot
             const regex = /^\s*(\w+)((?:\.\w+)*)(\.)?$/;
@@ -264,6 +244,17 @@ function activate(context) {
             if (match) {
                 const objectName = match[1];
                 const nestedStr = match[2];
+                // Detect variable assignments (e.g., myPage = <HYPERMEDIA>)
+                lines.forEach(line => {
+                    const _match = line.match(/^(\w+)\s*=\s*<([^>]+)>/);
+                    if (_match) {
+                        assignedTypes[_match[1]] = _match[2]; // Store object type for later use
+                    }
+                });
+                // outputChannel.appendLine(JSON.stringify({
+                //     types:assignedTypes,
+                //     objectName:objectName,
+                // }," "));
                 // The optional trailing dot is in match[3] if present.
                 const nestedProps = nestedStr.split('.').filter(s => s.length > 0);
                 const objectType = assignedTypes[objectName];

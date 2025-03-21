@@ -16,6 +16,9 @@
 	"categories": [
 		"Programming Languages"
 	],
+	"capabilities": {
+		"documentFormattingProvider": "true"
+	 },
 	"license": "MIT",
 	"icon": "images/icon.png",
 	"contributes": {

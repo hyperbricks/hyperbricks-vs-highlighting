@@ -1,7 +1,103 @@
+import { formatConfig } from './formatter';
 import * as vscode from "vscode";
 const outputChannel = vscode.window.createOutputChannel("HyperBricks");
+console.log('HyperBricks called!'); 
+// function insertTemplateSnippet() {
+//     const editor = vscode.window.activeTextEditor;
+//     if (!editor) {
+//       return; // No active editor found.
+//     }
+//     // Define the snippet with a placeholder ($1 places the cursor here).
+//     const snippet = new vscode.SnippetString('= <<[ $1 ]>>');
+//     // Insert the snippet at the current cursor position.
+//     editor.insertSnippet(snippet);
+// }
+
 
 export function activate(context: vscode.ExtensionContext) {
+    console.log('HyperBricks extension is activated!'); 
+    outputChannel.appendLine("HyperBricks extension is activated!")
+    // context.subscriptions.push(
+    //     vscode.languages.registerDocumentFormattingEditProvider(
+    //         { scheme: 'file', language: 'hyperbricks' },
+    //         {
+    //             provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+    //                 vscode.window.showInformationMessage("Formatter activated!");
+    //                 const formattedText = formatConfig(document.getText());
+    //                 const fullRange = new vscode.Range(
+    //                     document.positionAt(0),
+    //                     document.positionAt(document.getText().length)
+    //                 );
+    //                 return [vscode.TextEdit.replace(fullRange, formattedText)];
+    //             }
+    //         }
+    //     )
+    // );
+
+
+    const provider: vscode.DocumentFormattingEditProvider = {
+      provideDocumentFormattingEdits(
+        document: vscode.TextDocument,
+        options: vscode.FormattingOptions,
+        token: vscode.CancellationToken
+      ): vscode.ProviderResult<vscode.TextEdit[]> {
+
+
+        // Implement your formatting logic here.
+        // For example, you could replace all occurrences of 'old' with 'new'.
+        // const text = document.getText();
+        // const newText = text.replace(/old/g, 'new');
+        // const range = new vscode.Range(
+        //   document.positionAt(0),
+        //   document.positionAt(text.length)
+        // );
+        // return [vscode.TextEdit.replace(range, newText)];
+
+        vscode.window.showInformationMessage("Formatter activated!");
+
+        console.log('provideDocumentFormattingEdits called!'); 
+        const formattedText = formatConfig(document.getText());
+        const fullRange = new vscode.Range(
+            document.positionAt(0),
+            document.positionAt(document.getText().length)
+        );
+        return [vscode.TextEdit.replace(fullRange, formattedText)];
+      },
+    };
+  
+    const selector: vscode.DocumentSelector = {   
+        scheme: 'file',
+        language: 'hyperbricks', };
+  
+    const disposable = vscode.languages.registerDocumentFormattingEditProvider(
+      selector,
+      provider
+    );
+    
+    context.subscriptions.push(disposable);
+
+
+    context.subscriptions.push(vscode.commands.registerCommand('extension.templateInlineSnippet', () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return; // No active editor found.
+        }
+        // Define the snippet with a placeholder ($1 places the cursor between the brackets).
+        const snippet = new vscode.SnippetString(' = <<[ $1 ]>>');
+        // Insert the snippet at the current cursor position.
+        editor.insertSnippet(snippet);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('extension.templateReferenceSnippet', () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return; // No active editor found.
+        }
+        // Define the snippet with a placeholder ($1 places the cursor between the brackets).
+        const snippet = new vscode.SnippetString(' = {{TEMPLATE:mytemplate.html}}');
+        // Insert the snippet at the current cursor position.
+        editor.insertSnippet(snippet);
+    }));
 
     // Define HyperBricks types with descriptions
     const hyperbricksTypes = [
@@ -62,6 +158,8 @@ export function activate(context: vscode.ExtensionContext) {
         { label: "hx_trigger_after_settle", detail: "Sets HX-Trigger-After-Settle header.", documentation: "Triggers events after the settle step." },
         { label: "hx_trigger_after_swap", detail: "Sets HX-Trigger-After-Swap header.", documentation: "Triggers events after the swap step." }
     ];
+
+    
 
     // Define properties with descriptions for different object types
     const typeProperties: Record<string, { label: string; detail: string; documentation: string }[]> = {
@@ -248,7 +346,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Store object type assignments (variable → type)
     let assignedTypes: Record<string, string> = {};
 
-
+  
     let propertyCompletionProvider = vscode.languages.registerCompletionItemProvider("hyperbricks", {
         provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
             const lines = document.getText().split("\n");
@@ -284,16 +382,54 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 // If the first nested property is "response", provide hx_* completions
-                if (nestedProps.length > 0 && nestedProps[0] === "response") {
-                    // Only FRAGMENT and API_FRAGMENT_RENDER support nested hx_* fields
-                    if (objectType === "FRAGMENT" || objectType === "API_FRAGMENT_RENDER") {
-                        return responseProperties.map(prop => {
-                            let item = new vscode.CompletionItem(prop.label, vscode.CompletionItemKind.Property);
-                            item.detail = prop.detail;
-                            item.documentation = new vscode.MarkdownString(prop.documentation);
-                            return item;
-                        });
+                if (nestedProps.length > 0) {
+
+                    switch (nestedProps[0]) {
+                        case "response":
+                            // Only FRAGMENT and API_FRAGMENT_RENDER support nested hx_* fields
+                            if (objectType === "FRAGMENT" || objectType === "API_FRAGMENT_RENDER") {
+                                return responseProperties.map(prop => {
+                                    let item = new vscode.CompletionItem(prop.label, vscode.CompletionItemKind.Property);
+                                    item.detail = prop.detail;
+                                    item.documentation = new vscode.MarkdownString(prop.documentation);
+                                    return item;
+                                });
+                            }
+                            break;
+                            case "template":
+                                var tmpArr = typeProperties["TEMPLATE"].map(prop => {
+                                    let item = new vscode.CompletionItem(prop.label, vscode.CompletionItemKind.Property);
+                                    item.detail = prop.detail;
+                                    item.documentation = new vscode.MarkdownString(prop.documentation);
+                                    return item;
+                                });
+
+                                let item = new vscode.CompletionItem("inline", vscode.CompletionItemKind.Snippet);
+                                item.detail = "inline template";
+                                item.documentation = new vscode.MarkdownString("inline snippet");
+                                // Attach a command that triggers snippet insertion when the suggestion is selected.
+                                item.command = {
+                                    command: 'extension.templateInlineSnippet',
+                                    title: 'Insert Template Inline Snippet'
+                                    };
+                                    tmpArr.push(item);
+                                    
+                                    item = new vscode.CompletionItem("template", vscode.CompletionItemKind.Snippet);
+                                    item.detail = "template file";
+                                    item.documentation = new vscode.MarkdownString("template file in template folder");
+                                    // Attach a command that triggers snippet insertion when the suggestion is selected.
+                                    item.command = {
+                                        command: 'extension.templateReferenceSnippet',
+                                        title: 'Insert Template File reference'
+                                        };
+                                        tmpArr.push(item);
+                                    return tmpArr
+                            break;
+                        default:
+
+                            break;
                     }
+
                 } else {
                     // Otherwise, provide top-level properties based on the object's type
                     if (typeProperties[objectType]) {
@@ -312,5 +448,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(propertyCompletionProvider);
 
 }
+
 
 export function deactivate() { }

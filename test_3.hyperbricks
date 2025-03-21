@@ -1,21 +1,115 @@
-page = <HTML>
-page.value = <<[
-<div>
-<p> hello world </p>
-<span> Poorly formatted! </span>
+@import "lib/head.hyperbricks"
+@import "lib/top-menu.hyperbricks"
+@import "lib/proza-component.hyperbricks"
+@import "lib/proza/huiselijkheid.hyperbricks"
+@import "lib/proza/strand.hyperbricks"
+@import "lib/proza/moderne_literatuur.hyperbricks"
+@import "lib/proza/boodschappenlijstje.hyperbricks"
+@import "lib/proza/verwachtingen.hyperbricks"
+@import "lib/proza/zucht.hyperbricks"
+@import "lib/proza/lenin.hyperbricks"
+@import "lib/proza/rome.hyperbricks"
+
+
+page = <HYPERMEDIA>
+page.route = show
+page.template = <TEMPLATE>
+page.template {
+template = {{TEMPLATE:proza.html}}
+values {
+close_url = /proza/index
+
+top_menu < top_menu
+head < page.head
+content_first = <HTML>
+content_first.value = &nbsp;
+content_second = <HTML>
+content_second.value = &nbsp;
+
+
+script = <HTML>
+script.value = <<[
+<script defer>
+function type(i, t, ie, oe, e) {
+t = 40;
+let input = document.getElementById(ie).innerHTML;
+let outputElement = document.getElementById(oe);
+
+// Convert new lines to proper <br> tags
+input = input.replace(/\n/g, '<br>');
+
+if (i < input.length) {
+let charToAdd = input.charAt(i);
+
+// Preserve HTML tags
+if (charToAdd === '<') {
+let tagEnd = input.indexOf('>', i);
+if (tagEnd !== -1) {
+charToAdd = input.substring(i, tagEnd + 1);
+i = tagEnd; // Move index forward to the end of the tag
+}
+}
+
+outputElement.innerHTML += charToAdd;
+
+setTimeout(function () {
+document.getElementById("progress").style.width = "" + Math.round((i + 1) / input.length * 100) + "%"
+type(i + 1, t, ie, oe, e);
+}, t);
+} else {
+//setTimeout(e,5000);
+}
+}
+
+let params = new URLSearchParams(document.location.search);
+var p = params.get("p");
+if (!p) {
+p = "/huiselijkheid"
+}
+htmx.ajax('GET', p, '#content_1')
+
+</script>
+]>>
+}
+}
+
+
+menu = <HYPERMEDIA>
+menu.route = index
+menu.template = <TEMPLATE>
+menu.head < page.head
+menu.head.10 = <HTML>
+menu.head.10.value = <<[
+<meta property="og:title" content="Robbert Streng">
+<meta property="og:description" content="Geen Proza Dus">
+<meta property="og:image" content="https://www.robbertstreng.nl/proza/static/proza_preview.png">
+<meta property="og:url" content="https://www.robbertstreng.nl/proza/index">
+<meta property="og:type" content="website">
+]>>
+
+menu.template {
+template = {{TEMPLATE:menu.html}}
+values {
+top_menu < top_menu
+head < menu.head
+
+
+menu = <HTML>
+menu.value = <<[
+<div class="w-full flex items-start justify-center -mt-10 mb-10">
+<h1 class="font-semibold inria-sans-bold w-25 text-3xl">GEEN PROZA DUS</h1>
 </div>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=rome">Rome</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=lenin">Lenin</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=boodschappenlijstje">boodschappenlijstje</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=huiselijkheid">huiselijkheid</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=strand">strand</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=literatuur">literatuur</a>
+<a class="bg-[#ffffff] underline decoration-1]" href="show?p=verwachtingen">verwachtingen</a>
+<a class="bg-[#ffffff] underline decoration-1" href="show?p=zucht">zucht</a>
 ]>>
 
-block = <CSS>
-block.value = <<[
-p{
-color:  red;
-}
-]>>
 
-other = <JAVASCRIPT>
-other.value = <<[
-function test() {
-console.log("test")
+
 }
-]>>
+}

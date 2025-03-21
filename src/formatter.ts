@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as prettier from 'prettier';
+
 
 const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 
@@ -10,49 +12,55 @@ let lastDeclaredType: string | null = null;
 function getIndentation(): string {
     return useTabs ? '\t'.repeat(globalIndentation) : ' '.repeat(globalIndentation * INDENT_SIZE);
 }
-vscode.workspace.onDidChangeTextDocument(() => {
-   
-    return vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-})
+
 async function formatWithVSCode(
-    document: string,
+    block: string,
     languageId: string,
     baseIndentation: number
 ): Promise<string> {
     try {
-        // Create a temporary document.  No need to reuse; VS Code handles this efficiently.
-        const tempDocument = await vscode.workspace.openTextDocument({
-            content: document,
-            language: languageId,
-        });
-
-        const formattingOptions = {
-            insertSpaces: !useTabs,
-            tabSize: INDENT_SIZE,
-        };
-
-        const edits = await vscode.commands.executeCommand<vscode.TextEdit[]>(
-            'vscode.executeFormatDocumentProvider',
-            tempDocument.uri,
-            formattingOptions
-        );
-
-        if (!edits || edits.length === 0) {
-            return document; // Return original if no edits
+        
+        let options: prettier.Options = {
+            "semi": true,
+            "singleQuote": true,
+            "trailingComma": "all",
+            "printWidth": 180,
+            "tabWidth": 2
+            
         }
+        switch (languageId) {
+            case 'javascript':
+            case 'typescript':
+            case 'javascriptreact':
+            case 'typescriptreact':
+              options.parser = 'typescript'; // or 'babel', 'babel-ts'
+              break;
+            case 'json':
+            case 'jsonc':
+              options.parser = 'json';
+              break;
+            case 'css':
+            case 'scss':
+            case 'less':
+              options.parser = 'css';
+              break;
+            case 'html':
+              options.parser = 'html';
+              break;
+            // Add more language mappings as needed
+            default:
+              // Attempt to infer the parser from the file extension
+              break;
+          }
+        
+        const formattedText = await prettier.format(block, options);
+        return formattedText
 
-        // Use applyEdit (workspace edit), which is much safer and easier.
-        const edit = new vscode.WorkspaceEdit();
-        edits.forEach(e => edit.replace(tempDocument.uri, e.range, e.newText));
-        await vscode.workspace.applyEdit(edit);
-        // Return the updated document
-
-       
-       
-        return tempDocument.getText();
     } catch (error) {
-        console.error(`Failed to format ${languageId}:`, error);
-        return document; // Return original on error
+       
+        outputChannel.appendLine(`Failed to format ${languageId}: `+ error);
+
+        return block; // Return original on error
     }
 }
 

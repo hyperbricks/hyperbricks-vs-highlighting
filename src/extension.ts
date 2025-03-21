@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { formatConfig } from './formatter';
 
-
 const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 
 

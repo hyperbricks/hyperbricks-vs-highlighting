@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 
-const outputChannel = vscode.window.createOutputChannel("HyperBricks");
-
 let globalIndentation = 0;
 const INDENT_SIZE = 4;
 const useTabs = false;
@@ -11,60 +9,48 @@ function getIndentation(): string {
     return useTabs ? '\t'.repeat(globalIndentation) : ' '.repeat(globalIndentation * INDENT_SIZE);
 }
 
-function formatHTML(html: string, baseIndentation: number): string {
-    
-    let formattedHTML = html
-        .replace(/<([a-zA-Z0-9]+)([^>]*)>/g, '<$1$2>')
-        .replace(/>\s*</g, '><');
+async function formatWithVSCode(
+    document: string,
+    languageId: string,
+    baseIndentation: number
+): Promise<string> {
+    try {
+        // Create a temporary text document
+        const tempDocument = await vscode.workspace.openTextDocument({
+            content: document,
+            language: languageId,
+        });
 
-    let localIndentation = 0;
-    const lines = formattedHTML.split('\n');
-    const formattedLines = [];
-    const startingTagOffset = getIndentation();
+        // Define formatting options
+        const formattingOptions = {
+            insertSpaces: !useTabs,
+            tabSize: INDENT_SIZE,
+        };
 
-    for (const line of lines) {
-        let trimmedLine = line.trim();
-        if (trimmedLine.startsWith('</')) {
-            localIndentation = Math.max(0, localIndentation - 1);
+        // Get the formatting edits from VS Code
+        const edits = await vscode.commands.executeCommand<vscode.TextEdit[]>(
+            'vscode.executeFormatDocumentProvider',
+            tempDocument.uri,
+            formattingOptions
+        );
+
+        if (edits && edits.length > 0) {
+            // Apply the edits to the text
+            var wse = new vscode.WorkspaceEdit()
+            wse.set(tempDocument.uri, edits)
+            const success = await vscode.workspace.applyEdit(wse);
+            if (success) {
+                return tempDocument.getText();
+            }
         }
-        formattedLines.push(startingTagOffset + (useTabs ? '\t'.repeat(localIndentation) : ' '.repeat(localIndentation * INDENT_SIZE)) + trimmedLine);
-        if (trimmedLine.startsWith('<') && !trimmedLine.endsWith('/>') && !trimmedLine.startsWith('</')) {
-            localIndentation++;
-        }
+        return document; // Return original if no edits or applyEdit fails
+    } catch (error) {
+        console.error(`Failed to format ${languageId}:`, error);
+        return document; // Return original on error
     }
-    
-    const fl =  formattedLines.join('\n');
-    outputChannel.appendLine("dormatted:"+ fl)
-     return fl
 }
 
-function formatCSS(css: string, baseIndentation: number): string {
-    let formattedCSS = css
-        .replace(/\s*\{/g, ' {')
-        .replace(/\s*\}/g, ' }')
-        .replace(/;\s*/g, '; ')
-        .replace(/\s*:\s*/g, ': ');
-
-    let localIndentation = 0;
-    const lines = formattedCSS.split('\n');
-    const formattedLines = [];
-    const startingTagOffset = getIndentation();
-
-    for (const line of lines) {
-        let trimmedLine = line.trim();
-
-        if (trimmedLine.startsWith('}')) {
-            localIndentation = Math.max(0, localIndentation - 1);
-        }
-        formattedLines.push(startingTagOffset + (useTabs ? '\t'.repeat(localIndentation) : ' '.repeat(localIndentation * INDENT_SIZE)) + trimmedLine);
-        if (trimmedLine.endsWith('{')) {
-            localIndentation++;
-        }
-    }
-    return formattedLines.join('\n');
-}
-
-export function formatConfig(input: string): string {
+export async function formatConfig(input: string): Promise<string> { // Make formatConfig async
     globalIndentation = 0;
     const lines = input.split('\n');
     const formattedLines = [];
@@ -75,15 +61,16 @@ export function formatConfig(input: string): string {
     for (const line of lines) {
         let trimmedLine = line.trim();
 
-        // Check for type declarations (more generic)
+        // Check for type declarations
         if (trimmedLine.includes('<HTML>')) {
-            outputChannel.appendLine("Found HTML")
+            lastDeclaredType = 'HTML';
+        } else if (trimmedLine.includes('<TEMPLATE>')) {
+            lastDeclaredType = 'HTML';
+        } else if (trimmedLine.includes('<FRAGMENT>')) {
             lastDeclaredType = 'HTML';
         } else if (trimmedLine.includes('<CSS>')) {
-            outputChannel.appendLine("Found CSS")
             lastDeclaredType = 'CSS';
         } else if (trimmedLine.includes('<JAVASCRIPT>')) {
-            outputChannel.appendLine("Found JAVASCRIPT")
             lastDeclaredType = 'JAVASCRIPT';
         }
 
@@ -93,14 +80,16 @@ export function formatConfig(input: string): string {
                 let formattedText = '';
                 const startingTagIndentation = inTextBlockStart > -1 ? getIndentation() : "";
                 if (lastDeclaredType === 'HTML') {
-                    formattedText = formatHTML(lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n'), globalIndentation);
+                    formattedText = await formatWithVSCode(lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n'), 'html', globalIndentation);
                 } else if (lastDeclaredType === 'CSS') {
-                    formattedText = formatCSS(lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n'), globalIndentation);
+                    formattedText = await formatWithVSCode(lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n'), 'css', globalIndentation);
+                } else if (lastDeclaredType === 'JAVASCRIPT') {
+                    formattedText = await formatWithVSCode(lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n'), 'javascript', globalIndentation);
                 } else {
                     formattedText = lines.slice(inTextBlockStart + 1, lines.indexOf(line)).join('\n');
                 }
 
-                const indentedLines = formattedText.split('\n');
+                const indentedLines = formattedText.split('\n').map(l => getIndentation() + l);
                 formattedLines.push(...indentedLines);
                 formattedLines.push(getIndentation() + trimmedLine);
                 inTextBlockStart = -1;

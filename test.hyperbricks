@@ -10,10 +10,6 @@ hypermedia.head {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-        <div id="quoteContainer">
-<blockquote class="text-xl font-semibold italic text-gray-700">{{quote}}</blockquote>
-<p class="mt-4 text-gray-600">- {{author}}</p>
-</div>
         ]>>
         
     100 = <CSS>
@@ -23,7 +19,7 @@ hypermedia.head {
         
     120 = <JAVASCRIPT>
     120.inline = <<[
-
+        
         ]>>
         
 }
@@ -34,7 +30,7 @@ hypermedia.head {
 hypermedia.10 = <TEMPLATE>
 hypermedia.10 {
     inline = <<[
-
+        
         ]>>
         values {
         quote = "The only limit to our realization of tomorrow is our doubts of today."
@@ -48,10 +44,10 @@ fragment {
     template {
         
         inline = <<[
-<div id="quoteContainer">
-<blockquote class="text-xl font-semibold italic text-gray-700">{{quote}}</blockquote>
-<p class="mt-4 text-gray-600">- {{author}}</p>
-</div>
+            <div id="quoteContainer">
+                <blockquote class="text-xl font-semibold italic text-gray-700">{{ quote }}</blockquote>
+                <p class="mt-4 text-gray-600">- {{ author }}</p>
+            </div>
             ]>>
             
         values {

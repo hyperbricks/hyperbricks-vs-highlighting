@@ -34,29 +34,21 @@ function activate(context) {
     //         }
     //     )
     // );
+    console.log('Congratulations, your extension "hyperbricks-vs-highlighting" is now active!');
+    // Define a provider for document formatting
     const provider = {
         provideDocumentFormattingEdits(document, options, token) {
-            // Implement your formatting logic here.
-            // For example, you could replace all occurrences of 'old' with 'new'.
-            // const text = document.getText();
-            // const newText = text.replace(/old/g, 'new');
-            // const range = new vscode.Range(
-            //   document.positionAt(0),
-            //   document.positionAt(text.length)
-            // );
-            // return [vscode.TextEdit.replace(range, newText)];
-            vscode.window.showInformationMessage("Formatter activated!");
-            console.log('provideDocumentFormattingEdits called!');
-            const formattedText = (0, formatter_1.formatConfig)(document.getText());
-            const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length));
-            return [vscode.TextEdit.replace(fullRange, formattedText)];
+            const text = document.getText();
+            const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
+            // Await the result of formatConfig
+            return (0, formatter_1.formatConfig)(text).then(async (formattedText) => {
+                return [vscode.TextEdit.replace(fullRange, formattedText)];
+            });
         },
     };
-    const selector = {
-        scheme: 'file',
-        language: 'hyperbricks',
-    };
-    const disposable = vscode.languages.registerDocumentFormattingEditProvider(selector, provider);
+    // Register the document formatting provider for HyperBricks files
+    const disposable = vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'hyperbricks' }, // Correct language selector
+    provider);
     context.subscriptions.push(disposable);
     context.subscriptions.push(vscode.commands.registerCommand('extension.templateInlineSnippet', () => {
         const editor = vscode.window.activeTextEditor;

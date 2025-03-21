@@ -11,11 +11,11 @@ hx_method = POST
 hx_query = <QUERY>
 hx_query.create.fields = [field1,field2,field2]
 hx_query.create.sql = <<[
-            INSERT INTO users (field1, field2)
-            SELECT ?, ?
-            WHERE NOT EXISTS (
+                INSERT INTO users(field1, field2)
+    SELECT ?, ?
+        WHERE NOT EXISTS(
             SELECT 1 FROM users WHERE field2 = ?
-            )
+                )
     ]>>
     
 a {
@@ -62,7 +62,7 @@ name.value = Hello {{VAR:myname}} {{VAR:mylastname}}!
 static_test = <TEMPLATE>
 static_test {
     template = <<[
-
+        
         ]>>
         values {
         just_funny = ---TEST---

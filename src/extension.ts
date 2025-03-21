@@ -35,45 +35,34 @@ export function activate(context: vscode.ExtensionContext) {
     // );
 
 
+    console.log('Congratulations, your extension "hyperbricks-vs-highlighting" is now active!');
+
+    // Define a provider for document formatting
     const provider: vscode.DocumentFormattingEditProvider = {
-      provideDocumentFormattingEdits(
-        document: vscode.TextDocument,
-        options: vscode.FormattingOptions,
-        token: vscode.CancellationToken
-      ): vscode.ProviderResult<vscode.TextEdit[]> {
+        provideDocumentFormattingEdits(
+            document: vscode.TextDocument,
+            options: vscode.FormattingOptions,
+            token: vscode.CancellationToken
+        ): vscode.ProviderResult<vscode.TextEdit[]> {
+            const text = document.getText();
+            const fullRange = new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(text.length)
+            );
 
-
-        // Implement your formatting logic here.
-        // For example, you could replace all occurrences of 'old' with 'new'.
-        // const text = document.getText();
-        // const newText = text.replace(/old/g, 'new');
-        // const range = new vscode.Range(
-        //   document.positionAt(0),
-        //   document.positionAt(text.length)
-        // );
-        // return [vscode.TextEdit.replace(range, newText)];
-
-        vscode.window.showInformationMessage("Formatter activated!");
-
-        console.log('provideDocumentFormattingEdits called!'); 
-        const formattedText = formatConfig(document.getText());
-        const fullRange = new vscode.Range(
-            document.positionAt(0),
-            document.positionAt(document.getText().length)
-        );
-        return [vscode.TextEdit.replace(fullRange, formattedText)];
-      },
+            // Await the result of formatConfig
+            return formatConfig(text).then(async formattedText => { // Await here and make the callback async
+                return [vscode.TextEdit.replace(fullRange, formattedText)];
+            });
+        },
     };
-  
-    const selector: vscode.DocumentSelector = {   
-        scheme: 'file',
-        language: 'hyperbricks', };
-  
+
+    // Register the document formatting provider for HyperBricks files
     const disposable = vscode.languages.registerDocumentFormattingEditProvider(
-      selector,
-      provider
+        { scheme: 'file', language: 'hyperbricks' }, // Correct language selector
+        provider
     );
-    
+
     context.subscriptions.push(disposable);
 
 

@@ -1,0 +1,21 @@
+page = <HTML>
+page.value = <<[
+<div>
+<p> hello world </p>
+<span> Poorly formatted! </span>
+</div>
+]>>
+
+block = <CSS>
+block.value = <<[
+p{
+color:  red;
+}
+]>>
+
+other = <JAVASCRIPT>
+other.value = <<[
+function test() {
+console.log("test")
+}
+]>>

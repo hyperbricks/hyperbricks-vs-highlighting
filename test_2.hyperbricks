@@ -14,10 +14,10 @@ hx_query.create.sql = <<[
             INSERT INTO users (field1, field2)
             SELECT ?, ?
             WHERE NOT EXISTS (
-                SELECT 1 FROM users WHERE field2 = ?
+            SELECT 1 FROM users WHERE field2 = ?
             )
-            ]>>
-
+    ]>>
+    
 a {
     sometype = <HYPERMEDIA>
 }
@@ -28,7 +28,7 @@ hx_history_restore_request = false
 
 
 fragment = <FRAGMENT>
-fragment.st = 
+fragment.st =
 
 # data
 feed = <RSS_FEED>
@@ -63,11 +63,8 @@ static_test = <TEMPLATE>
 static_test {
     template = <<[
 
-    <!--<p>THIS IS SOMETHING FUNNEY</p>-->
-    <h1>THIS LOOKS {{just_funny}} LIKE A COMPONENT</h1>
-    <p>BLABLABLABAAAH</p>
-    ]>>
-    values {
+        ]>>
+        values {
         just_funny = ---TEST---
     }
 }
@@ -77,34 +74,33 @@ index_page_1.title = TEST 123
 index_page_1.slug = templatepage
 index_page_1.section = mainmenu
 index_page_1.index = 1
-index_page_1.template = <TEMPLATE> 
+index_page_1.template = <TEMPLATE>
 index_page_1.template {
-	template = {{TEMPLATE:basic_template.tmpl}}
-	values {
-		header_section = TEXT
+    template = {{TEMPLATE:basic_template.tmpl}}
+    values {
+        header_section = TEXT
         header_section.value = TEST TEXT
         header_section.wrap = <p class="test">|</p>
-
-		main_section = IMAGE
+        
+        main_section = IMAGE
         main_section.src = source/resources/images/image-10.jpg
         main_section.width = 200
         main_section.wrap = <div class="test">|</div>
-
+        
         footer_section = COA
         footer_section {
             1 = TEXT
             1.value = HELLO FROM COA CONTENT TEXT
-
+            
             2 = HTML
             2.value = xxxx
-
+            
             3 = TEXT
             3.value = <hr>
         }
-	}
+    }
 }
-
-
+`
 main_menu = <MENU>
 main_menu {
     section = mainmenu
@@ -124,10 +120,10 @@ home_page.template {
     template = {{TEMPLATE:index.tmpl}}
     values {
         favicon = FAVICON
-        favicon.href =  
-
+        favicon.href =
+        
         menu < main_menu
-
+        
         top_title = RENDER
         top_title {
             1 = TEXT
@@ -139,7 +135,7 @@ home_page.template {
         content.values.just_funny = --xxx---
         button_link = features
         button_text = features
-
+        
     }
 }
 
@@ -149,12 +145,12 @@ features_page.section = mainmenu
 features_page.title = Features
 features_page.slug = features
 features_page.template.values {
-        top_title = top_title
-        header = features_top_header
-        content_header = features_top_content_header
-        content = features_top_content
-        button_link = features_top_button_link
-        button_text = features_top_button_text
+    top_title = top_title
+    header = features_top_header
+    content_header = features_top_content_header
+    content = features_top_content
+    button_link = features_top_button_link
+    button_text = features_top_button_text
 }
 
 contact_page < home_page

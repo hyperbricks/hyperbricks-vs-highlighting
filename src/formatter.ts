@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as prettier from 'prettier';
 
+// --- Version 11.0 (Formatter - Prettier) ---
 
 const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 
@@ -13,57 +14,72 @@ function getIndentation(): string {
     return useTabs ? '\t'.repeat(globalIndentation) : ' '.repeat(globalIndentation * INDENT_SIZE);
 }
 
-async function formatWithVSCode(
+async function formatWithPrettier(
     block: string,
-    languageId: string,
-    baseIndentation: number
+    languageId: string
 ): Promise<string> {
     try {
-        
-        let options: prettier.Options = {
-            "semi": true,
-            "singleQuote": true,
-            "trailingComma": "all",
-            "printWidth": 180,
-            "tabWidth": 2
-            
-        }
+        outputChannel.appendLine(`Formatting ${languageId} with Prettier`);
+
+        let parser: prettier.BuiltInParserName | undefined = undefined;
         switch (languageId) {
             case 'javascript':
+                parser = 'babel'; // Use 'babel' for JavaScript, handles modern syntax
+                break;
             case 'typescript':
-            case 'javascriptreact':
-            case 'typescriptreact':
-              options.parser = 'typescript'; // or 'babel', 'babel-ts'
-              break;
-            case 'json':
-            case 'jsonc':
-              options.parser = 'json';
-              break;
-            case 'css':
-            case 'scss':
-            case 'less':
-              options.parser = 'css';
-              break;
+                parser = 'typescript';
+                break;
             case 'html':
-              options.parser = 'html';
-              break;
-            // Add more language mappings as needed
+                parser = 'html';
+                break;
+            case 'css':
+                parser = 'css';
+                break;
+            case 'json':
+                parser = 'json';
+                break;
+            case 'jsonc': // JSON with comments
+                parser = 'json5'; // Use json5 parser for jsonc
+                break;
+            case 'scss':
+                parser = 'scss'; // Explicitly specify SCSS
+                break;
+            case 'less':
+                parser = 'less';  // Explicitly specify LESS
+                break;
+
+            // Add other language mappings as needed
             default:
-              // Attempt to infer the parser from the file extension
-              break;
-          }
-        
+                outputChannel.appendLine(`Unsupported language: ${languageId}. Returning original content.`);
+                return block; // Return original if unsupported
+        }
+
+        if (!parser) {
+            outputChannel.appendLine(`No parser found for ${languageId}. Returning original content.`);
+            return block;
+        }
+
+        const options: prettier.Options = {
+            parser: parser,  // *Crucially*, set the parser
+            tabWidth: INDENT_SIZE,
+            useTabs: useTabs,
+            semi: true,        // Add semicolons
+            singleQuote: true,  // Use single quotes
+            trailingComma: 'all', // Add trailing commas
+            printWidth: 180,     // Wider print width
+            // ... other Prettier options ...
+        };
+
         const formattedText = await prettier.format(block, options);
-        return formattedText
+        return formattedText;
 
     } catch (error) {
-       
-        outputChannel.appendLine(`Failed to format ${languageId}: `+ error);
-
+        outputChannel.appendLine(`Prettier formatting error (${languageId}): ${error}`);
+        console.error(`Failed to format ${languageId} with Prettier:`, error);
         return block; // Return original on error
     }
 }
-
+// --- Main Formatting Logic (formatConfig) ---
 export async function formatConfig(input: string): Promise<string> {
     globalIndentation = 0;
     const lines = input.split('\n');
@@ -74,11 +90,8 @@ export async function formatConfig(input: string): Promise<string> {
     for (const [index, line] of lines.entries()) {
         let trimmedLine = line.trim();
 
-        if (trimmedLine.includes('<HTML>')) {
-            lastDeclaredType = 'HTML';
-        } else if (trimmedLine.includes('<TEMPLATE>')) {
-            lastDeclaredType = 'HTML';
-        } else if (trimmedLine.includes('<FRAGMENT>')) {
+        // Detect language declarations
+        if (trimmedLine.includes('<HTML>') || trimmedLine.includes('<TEMPLATE>') || trimmedLine.includes('<FRAGMENT>')) {
             lastDeclaredType = 'HTML';
         } else if (trimmedLine.includes('<CSS>')) {
             lastDeclaredType = 'CSS';
@@ -86,6 +99,7 @@ export async function formatConfig(input: string): Promise<string> {
             lastDeclaredType = 'JAVASCRIPT';
         }
 
+        // Handle text blocks
         if (inTextBlock) {
             if (trimmedLine === ']>>') {
                 inTextBlock = false;
@@ -96,31 +110,30 @@ export async function formatConfig(input: string): Promise<string> {
 
                 let formattedText = '';
                 if (lastDeclaredType) {
-                    formattedText = await formatWithVSCode(textBlockContent, lastDeclaredType.toLowerCase(), globalIndentation);
+                    const lowerCaseLanguageId = lastDeclaredType.toLowerCase();
+					// Now with prettier
+                    formattedText = await formatWithPrettier(textBlockContent, lowerCaseLanguageId);
                 } else {
                     formattedText = textBlockContent;
                 }
 
                 const formattedLinesArr = formattedText.split('\n');
-                const indentedLines = formattedLinesArr.map(line => startingTagIndentation + line); // Much simpler indentation
+                const indentedLines = formattedLinesArr.map(line => startingTagIndentation + line);
 
                 formattedLines.push(...indentedLines);
                 formattedLines.push(getIndentation() + trimmedLine);
                 inTextBlockStart = -1;
-
-                // Correct Post Text Block Decrementation
-                globalIndentation = Math.max(0, globalIndentation - 1);
-                continue; // Very important:  Skip to the next line *after* processing the block.
+                globalIndentation = Math.max(0, globalIndentation - 1); // Decrement *after* block
+                continue;
             }
-            continue; // Skip lines *inside* the text block.
+            continue;
         }
 
-
+        // Handle indentation outside text blocks
         if (/^([}\]])/.test(trimmedLine)) {
             globalIndentation = Math.max(0, globalIndentation - 1);
         }
 
-        // Add line (before opening bracket)
         const formattedLine = getIndentation() + trimmedLine;
         formattedLines.push(formattedLine);
 
@@ -128,13 +141,13 @@ export async function formatConfig(input: string): Promise<string> {
             globalIndentation++;
         }
 
+        // Detect start of text block
         if (trimmedLine.endsWith('<<[')) {
             inTextBlock = true;
             inTextBlockStart = index;
-            // Indentation will be applied inside text block processing
         }
     }
-
     const result = formattedLines.join('\n');
+    vscode.window.showInformationMessage("Formatting done!");
     return result;
 }

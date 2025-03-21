@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
             { scheme: 'file', language: 'hyperbricks' },
             {
                 async provideDocumentFormattingEdits(document: vscode.TextDocument): Promise<vscode.TextEdit[]> {
-                    vscode.window.showInformationMessage("Formatter activated!");
+                    
                     const formattedText = await formatConfig(document.getText());
                     const fullRange = new vscode.Range(
                         document.positionAt(0),

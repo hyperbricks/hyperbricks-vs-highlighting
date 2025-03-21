@@ -8,7 +8,6 @@ function activate(context) {
     outputChannel.appendLine("HyperBricks extension is activated!");
     context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'hyperbricks' }, {
         async provideDocumentFormattingEdits(document) {
-            vscode.window.showInformationMessage("Formatter activated!");
             const formattedText = await (0, formatter_1.formatConfig)(document.getText());
             const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(document.getText().length));
             return [vscode.TextEdit.replace(fullRange, formattedText)];

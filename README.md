@@ -1,65 +1,70 @@
-# hyperbricks README
+# HyperBricks VS Code Extension
 
-This is the README for your extension "hyperbricks". After writing up a brief description, we recommend including the following sections.
+## Overview
+
+The HyperBricks VS Code Extension provides syntax highlighting, formatting, and IntelliSense support for the HyperBricks.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Syntax Highlighting**: Enhanced syntax highlighting for `.hyperbricks` files.
+- **Code Formatting**: Automatic code formatting using Prettier.
+- **IntelliSense**: Code completion and suggestions for HyperBricks types and properties.
+- **Snippets**: Predefined code snippets for common HyperBricks patterns.
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/hyperbricks/hyperbricks-vs-highlighting.git
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd hyperbricks-vs-highlighting
+    ```
+3. Install dependencies:
+    ```sh
+    npm install
+    ```
+4. Compile the TypeScript code:
+    ```sh
+    npm run compile
+    ```
+5. Open the project in VS Code:
+    ```sh
+    code .
+    ```
+6. Press `F5` to launch the extension in a new VS Code window.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Usage
 
-## Requirements
+- Open a `.hyperbricks` file to see syntax highlighting and IntelliSense in action.
+- Use the provided snippets for quick code insertion.
+- Format your code using the built-in formatter (right-click and select "Format Document" or use the default shortcut `Shift+Alt+F`).
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Configuration
 
-## Extension Settings
+The extension uses a Prettier configuration defined in `.prettierrc` for formatting. You can customize the settings as needed.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Contributing
 
-For example:
+Contributions are welcome! Please follow these steps to contribute:
 
-This extension contributes the following settings:
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Make your changes and commit them with clear messages.
+4. Push your changes to your fork.
+5. Create a pull request to the main repository.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## License
 
-## Known Issues
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## Acknowledgements
 
-## Release Notes
+- [VS Code API](https://code.visualstudio.com/api)
+- [Prettier](https://prettier.io/)
+- [TypeScript](https://www.typescriptlang.org/)
 
-Users appreciate release notes as you update your extension.
+## Contact
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+For any questions or suggestions, please open an issue or contact the maintainer at [your-email@example.com].

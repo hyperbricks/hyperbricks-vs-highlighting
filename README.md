@@ -19,6 +19,10 @@ Syntax highlighting, formatting, and IntelliSense support for `.hyperbricks` fil
 
 The extension uses a Prettier configuration defined in `.prettierrc` for formatting. You can customize the settings as needed.
 
+## What is HyperBricks?
+
+HyperBricks is a headless content management system that aims to bridge front and back-end development of HTMX powered hypermedia applications. See this [Github repository](https://github.com/hyperbricks/hyperbricks-vs-highlighting) for more information
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:

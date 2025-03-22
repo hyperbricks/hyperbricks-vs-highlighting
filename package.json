@@ -1,11 +1,10 @@
 {
 	"name": "hyperbricks",
 	"main": "./dist/extension.js",
-	"displayName": "HyperBricks",
-	"description": "Provides syntax highlighting, formatting, and IntelliSense for .hyperbricks configuration files.",
+	"displayName": "Hyperbricks",
+	"description": "Highlighting, formatting, and IntelliSense for .hyperbricks files",
 	"version": "0.0.1",
-	"publisherDisplayName": "Robbert Streng",
-	"publisher": "streng",
+	"publisher": "Robbert Streng",
 	"engines": {
 		"vscode": "^1.95.0"
 	},

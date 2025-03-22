@@ -12,6 +12,7 @@
 
 
 page = <HYPERMEDIA>
+
 page.route = show
 page.template = <TEMPLATE>
 page.template {

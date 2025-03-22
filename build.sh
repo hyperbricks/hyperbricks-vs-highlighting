@@ -17,6 +17,6 @@ npm run compile
 
 # Package the extension using vsce
 echo "Packaging the extension..."
-npx vsce package
+npm run package
 
 echo "Build complete!"

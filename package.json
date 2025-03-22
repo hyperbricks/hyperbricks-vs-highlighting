@@ -3,12 +3,15 @@
 	"main": "./dist/extension.js",
 	"displayName": "Hyperbricks",
 	"description": "Highlighting, formatting, and IntelliSense for .hyperbricks files",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "Robbert Streng",
 	"engines": {
 		"vscode": "^1.95.0"
 	},
 	"activationEvents": [
+		"onStartupFinished",
+		"onCommand:extension.templateInlineSnippet",
+		"onCommand:extension.templateReferenceSnippet",
 		"onCommand:hyperbricks"
 	],
 	"keywords": [
@@ -20,7 +23,7 @@
 		"Programming Languages"
 	],
 	"capabilities": {
-		"documentFormattingProvider": "true"
+		"documentFormattingProvider": true
 	},
 	"license": "MIT",
 	"icon": "images/icon.png",
@@ -257,7 +260,7 @@
 			{
 				"id": "hyperbricks",
 				"aliases": [
-					"hyperbricks",
+					"HyperBricks",
 					"hyperbricks"
 				],
 				"extensions": [
@@ -294,12 +297,15 @@
 		]
 	},
 	"scripts": {
-		"compile": "tsc -p ./"
+		"compile": "tsc -p ./",
+		"package": "npx vsce package --out ./releases/hyperbricks-$(node -p \"require('./package.json').version\").vsix"
+	},
+	"dependencies": {
+    	"prettier": "^3.5.3"
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.2",
 		"@types/vscode": "1.95.0",
-		"prettier": "^3.5.3",
 		"typescript": "^4.9.5",
 		"vsce": "^2.15.0",
 		"vscode": "^1.1.37"

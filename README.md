@@ -9,6 +9,12 @@ Syntax highlighting, formatting, and IntelliSense support for `.hyperbricks` fil
 - **IntelliSense**: Code completion and suggestions for HyperBricks types and properties.
 - **Snippets**: Predefined code snippets for common HyperBricks patterns.
 
+## Installation
+
+- Download the hyperbricks-\<latest-version\>.vsix  
+- Ctrl+Shift+P or Command+Shift+P (macos) and Run the install from VSIX...
+- Select the hyperbricks-\<latest-version\>.vsix and press the install button in the filebrowser.
+
 ## Usage
 
 - Open a `.hyperbricks` file to see syntax highlighting and IntelliSense in action.

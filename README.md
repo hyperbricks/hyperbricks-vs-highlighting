@@ -1,39 +1,13 @@
-# HyperBricks VS Code Extension
+## HyperBricks for Visual Studio Code
 
-## Overview
-
-The HyperBricks VS Code Extension provides syntax highlighting, formatting, and IntelliSense support for the HyperBricks.
+Syntax highlighting, formatting, and IntelliSense support for `.hyperbricks` files
 
 ## Features
 
-- **Syntax Highlighting**: Enhanced syntax highlighting for `.hyperbricks` files.
+- **Syntax Highlighting**: Enhanced syntax highlighting .
 - **Code Formatting**: Automatic code formatting using Prettier.
 - **IntelliSense**: Code completion and suggestions for HyperBricks types and properties.
 - **Snippets**: Predefined code snippets for common HyperBricks patterns.
-
-## Installation
-
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/hyperbricks/hyperbricks-vs-highlighting.git
-    ```
-2. Navigate to the project directory:
-    ```sh
-    cd hyperbricks-vs-highlighting
-    ```
-3. Install dependencies:
-    ```sh
-    npm install
-    ```
-4. Compile the TypeScript code:
-    ```sh
-    npm run compile
-    ```
-5. Open the project in VS Code:
-    ```sh
-    code .
-    ```
-6. Press `F5` to launch the extension in a new VS Code window.
 
 ## Usage
 
@@ -60,7 +34,7 @@ Contributions are welcome! Please follow these steps to contribute:
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-
+- [Github repository](https://github.com/hyperbricks/hyperbricks-vs-highlighting)
 - [VS Code API](https://code.visualstudio.com/api)
 - [Prettier](https://prettier.io/)
 - [TypeScript](https://www.typescriptlang.org/)

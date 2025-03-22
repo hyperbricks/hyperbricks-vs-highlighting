@@ -1,10 +1,11 @@
 {
 	"name": "hyperbricks",
 	"main": "./out/extension.js",
-	"displayName": "hyperbricks",
-	"description": "Provides syntax highlighting and support for hyperbricks, a Domain-Specific Language for Hyperbricks CMS",
+	"displayName": "HyperBricks",
+	"description": "Provides syntax highlighting, formatting, and IntelliSense for .hyperbricks configuration files.",
 	"version": "0.0.1",
-	"publisher": "Robbert Streng",
+	"publisherDisplayName": "Robbert Streng",
+	"publisher": "streng",
 	"engines": {
 		"vscode": "^1.95.0"
 	},
@@ -258,8 +259,8 @@
 					"hyperbricks"
 				],
 				"extensions": [
-					".hyperbricks",
-					".hs"
+					".hyperbricks"
+					
 				],
 				"configuration": "./language-configuration.json"
 			}

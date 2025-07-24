@@ -28,6 +28,16 @@
 	"license": "MIT",
 	"icon": "images/icon.png",
 	"contributes": {
+		"configuration": {
+			"title": "Hyperbricks",
+			"properties": {
+				"hyperbricks.enableTailwindIntegration": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable Tailwind CSS hinting in hyperbricks files"
+				}
+			}
+		},
 		"configurationDefaults": {
 			"editor.tokenColorCustomizations": {
 				"textMateRules": [
@@ -301,7 +311,7 @@
 		"package": "npx vsce package --out ./releases/hyperbricks-$(node -p \"require('./package.json').version\").vsix"
 	},
 	"dependencies": {
-    	"prettier": "^3.5.3"
+		"prettier": "^3.5.3"
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.2",
@@ -315,6 +325,7 @@
 		"url": "https://github.com/hyperbricks/hyperbricks-vs-highlighting.git"
 	},
 	"__metadata": {
-		"size": 167426
+		"size": 8078649,
+		"installedTimestamp": 1742643411429
 	}
 }

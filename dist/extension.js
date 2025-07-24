@@ -6,6 +6,59 @@ const formatter_1 = require("./formatter");
 const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 function activate(context) {
     outputChannel.appendLine("HyperBricks extension is activated!");
+    const applyTailwindIntegration = () => {
+        try {
+            const config = vscode.workspace.getConfiguration('hyperbricks');
+            const enableTailwind = config.get('enableTailwindIntegration', true);
+            console.log('enableTailwind:', enableTailwind);
+            const tailwindExtension = vscode.extensions.getExtension('bradlc.vscode-tailwindcss');
+            if (!tailwindExtension) {
+                outputChannel.appendLine('Tailwind CSS extension not installed, skipping integration');
+                return;
+            }
+            const tailwindConfig = vscode.workspace.getConfiguration('tailwindCSS');
+            const includeLanguages = tailwindConfig.get('includeLanguages') || {};
+            if (enableTailwind) {
+                if (!includeLanguages['hyperbricks']) {
+                    includeLanguages['hyperbricks'] = 'html';
+                    return tailwindConfig.update('includeLanguages', includeLanguages, vscode.ConfigurationTarget.Global).then(() => {
+                        vscode.window.showInformationMessage('Tailwind CSS support enabled for Hyperbricks files. Reload window to apply.', 'Reload Now').then(selection => {
+                            if (selection === 'Reload Now') {
+                                vscode.commands.executeCommand('workbench.action.reloadWindow');
+                            }
+                        });
+                    });
+                }
+            }
+            else {
+                if (includeLanguages['hyperbricks']) {
+                    delete includeLanguages['hyperbricks'];
+                    return tailwindConfig.update('includeLanguages', includeLanguages, vscode.ConfigurationTarget.Global).then(() => {
+                        vscode.window.showInformationMessage('Tailwind CSS support disabled for Hyperbricks files. Reload window to apply.', 'Reload Now').then(selection => {
+                            if (selection === 'Reload Now') {
+                                vscode.commands.executeCommand('workbench.action.reloadWindow');
+                            }
+                        });
+                    });
+                }
+            }
+        }
+        catch (e) {
+            console.error('applyTailwindIntegration error:', e);
+        }
+    };
+    // Apply once on activation
+    applyTailwindIntegration();
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration('hyperbricks.enableTailwindIntegration')) {
+            try {
+                applyTailwindIntegration();
+            }
+            catch (err) {
+                console.error('Error applying Tailwind integration:', err);
+            }
+        }
+    }));
     context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'hyperbricks' }, {
         async provideDocumentFormattingEdits(document) {
             const formattedText = await (0, formatter_1.formatConfig)(document.getText());

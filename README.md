@@ -13,7 +13,7 @@ Syntax highlighting, formatting, and IntelliSense support for `.hyperbricks` fil
 
 - Download the hyperbricks-\<latest-version\>.vsix  
 - Ctrl+Shift+P or Command+Shift+P (macos) and Run the install from VSIX...
-- Select the hyperbricks-\<latest-version\>.vsix and press the install button in the filebrowser.
+- Select and open the hyperbricks-\<latest-version\>.vsix
 
 ## Usage
 
@@ -41,7 +41,7 @@ Contributions are welcome! Please follow these steps to contribute:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/hyperbricks/hyperbricks-vs-highlighting/blob/HEAD/LICENSE) file for details.
 
 ## Acknowledgements
 - [Github repository](https://github.com/hyperbricks/hyperbricks-vs-highlighting)

@@ -7,18 +7,83 @@ const outputChannel = vscode.window.createOutputChannel("HyperBricks");
 export function activate(context: vscode.ExtensionContext) {
     outputChannel.appendLine("HyperBricks extension is activated!")
 
+    const applyTailwindIntegration = () => {
+        try {
+            const config = vscode.workspace.getConfiguration('hyperbricks');
+            const enableTailwind = config.get<boolean>('enableTailwindIntegration', true);
+            console.log('enableTailwind:', enableTailwind);
+
+            const tailwindExtension = vscode.extensions.getExtension('bradlc.vscode-tailwindcss');
+            if (!tailwindExtension) {
+                outputChannel.appendLine('Tailwind CSS extension not installed, skipping integration');
+                return;
+            }
+
+            const tailwindConfig = vscode.workspace.getConfiguration('tailwindCSS');
+            const includeLanguages = tailwindConfig.get<Record<string, string>>('includeLanguages') || {};
+
+            if (enableTailwind) {
+                if (!includeLanguages['hyperbricks']) {
+                    includeLanguages['hyperbricks'] = 'html';
+                    return tailwindConfig.update('includeLanguages', includeLanguages, vscode.ConfigurationTarget.Global).then(() => {
+                        vscode.window.showInformationMessage(
+                            'Tailwind CSS support enabled for Hyperbricks files. Reload window to apply.',
+                            'Reload Now'
+                        ).then(selection => {
+                            if (selection === 'Reload Now') {
+                                vscode.commands.executeCommand('workbench.action.reloadWindow');
+                            }
+                        });
+                    });
+                }
+            } else {
+                if (includeLanguages['hyperbricks']) {
+                    delete includeLanguages['hyperbricks'];
+                    return tailwindConfig.update('includeLanguages', includeLanguages, vscode.ConfigurationTarget.Global).then(() => {
+                        vscode.window.showInformationMessage(
+                            'Tailwind CSS support disabled for Hyperbricks files. Reload window to apply.',
+                            'Reload Now'
+                        ).then(selection => {
+                            if (selection === 'Reload Now') {
+                                vscode.commands.executeCommand('workbench.action.reloadWindow');
+                            }
+                        });
+                    });
+                }
+            }
+        } catch (e) {
+            console.error('applyTailwindIntegration error:', e);
+        }
+    };
+
+
+    // Apply once on activation
+    applyTailwindIntegration();
+
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('hyperbricks.enableTailwindIntegration')) {
+                try {
+                    applyTailwindIntegration();
+                } catch (err) {
+                    console.error('Error applying Tailwind integration:', err);
+                }
+            }
+        })
+    );
+
     context.subscriptions.push(
         vscode.languages.registerDocumentFormattingEditProvider(
             { scheme: 'file', language: 'hyperbricks' },
             {
                 async provideDocumentFormattingEdits(document: vscode.TextDocument): Promise<vscode.TextEdit[]> {
-                    
+
                     const formattedText = await formatConfig(document.getText());
                     const fullRange = new vscode.Range(
                         document.positionAt(0),
                         document.positionAt(document.getText().length)
                     );
-                    return [vscode.TextEdit.replace(fullRange,  formattedText)];
+                    return [vscode.TextEdit.replace(fullRange, formattedText)];
                 }
             }
         )
@@ -106,7 +171,7 @@ export function activate(context: vscode.ExtensionContext) {
         { label: "hx_trigger_after_swap", detail: "Sets HX-Trigger-After-Swap header.", documentation: "Triggers events after the swap step." }
     ];
 
-    
+
 
     // Define properties with descriptions for different object types
     const typeProperties: Record<string, { label: string; detail: string; documentation: string }[]> = {
@@ -293,7 +358,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Store object type assignments (variable → type)
     let assignedTypes: Record<string, string> = {};
 
-  
+
     let propertyCompletionProvider = vscode.languages.registerCompletionItemProvider("hyperbricks", {
         provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
             const lines = document.getText().split("\n");
@@ -343,34 +408,34 @@ export function activate(context: vscode.ExtensionContext) {
                                 });
                             }
                             break;
-                            case "template":
-                                var tmpArr = typeProperties["TEMPLATE"].map(prop => {
-                                    let item = new vscode.CompletionItem(prop.label, vscode.CompletionItemKind.Property);
-                                    item.detail = prop.detail;
-                                    item.documentation = new vscode.MarkdownString(prop.documentation);
-                                    return item;
-                                });
+                        case "template":
+                            var tmpArr = typeProperties["TEMPLATE"].map(prop => {
+                                let item = new vscode.CompletionItem(prop.label, vscode.CompletionItemKind.Property);
+                                item.detail = prop.detail;
+                                item.documentation = new vscode.MarkdownString(prop.documentation);
+                                return item;
+                            });
 
-                                let item = new vscode.CompletionItem("inline", vscode.CompletionItemKind.Snippet);
-                                item.detail = "inline template";
-                                item.documentation = new vscode.MarkdownString("inline snippet");
-                                // Attach a command that triggers snippet insertion when the suggestion is selected.
-                                item.command = {
-                                    command: 'extension.templateInlineSnippet',
-                                    title: 'Insert Template Inline Snippet'
-                                    };
-                                    tmpArr.push(item);
-                                    
-                                    item = new vscode.CompletionItem("template", vscode.CompletionItemKind.Snippet);
-                                    item.detail = "template file";
-                                    item.documentation = new vscode.MarkdownString("template file in template folder");
-                                    // Attach a command that triggers snippet insertion when the suggestion is selected.
-                                    item.command = {
-                                        command: 'extension.templateReferenceSnippet',
-                                        title: 'Insert Template File reference'
-                                        };
-                                        tmpArr.push(item);
-                                    return tmpArr
+                            let item = new vscode.CompletionItem("inline", vscode.CompletionItemKind.Snippet);
+                            item.detail = "inline template";
+                            item.documentation = new vscode.MarkdownString("inline snippet");
+                            // Attach a command that triggers snippet insertion when the suggestion is selected.
+                            item.command = {
+                                command: 'extension.templateInlineSnippet',
+                                title: 'Insert Template Inline Snippet'
+                            };
+                            tmpArr.push(item);
+
+                            item = new vscode.CompletionItem("template", vscode.CompletionItemKind.Snippet);
+                            item.detail = "template file";
+                            item.documentation = new vscode.MarkdownString("template file in template folder");
+                            // Attach a command that triggers snippet insertion when the suggestion is selected.
+                            item.command = {
+                                command: 'extension.templateReferenceSnippet',
+                                title: 'Insert Template File reference'
+                            };
+                            tmpArr.push(item);
+                            return tmpArr
                             break;
                         default:
 

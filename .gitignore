@@ -6,5 +6,4 @@
 
 # Ignore Mac OS DS_Store files everywhere
 **/.DS_Store
-releases/hyperbricks-0.0.2.vsix
-/releases
+

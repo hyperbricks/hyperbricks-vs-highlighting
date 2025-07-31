@@ -17,6 +17,12 @@
             "include": "#hyperbricks_import"
         },
         {
+            "include": "#hyperbricks_macro"
+        },
+        {
+            "include": "#hyperbricks_macro_template"
+        },
+        {
             "include": "#hyperbricks_types"
         },
         {
@@ -245,6 +251,64 @@
             "patterns": [
                 {
                     "include": "#hyperbricks_string"
+                }
+            ]
+        },
+        "hyperbricks_macro": {
+            "name": "meta.macro.hyperbricks",
+            "begin": "^\\s*@macro\\b",
+            "beginCaptures": {
+                "0": {
+                    "name": "keyword.control.macro.hyperbricks"
+                }
+            },
+            "end": "(=\\s*)(?=<<<\\[)",
+            "endCaptures": {
+                "1": {
+                    "name": "keyword.operator.assignment.macro.hyperbricks"
+                }
+            },
+            "patterns": [
+                {
+                    "name": "variable.parameter.macro.hyperbricks",
+                    "match": "\\(([^)]*)\\)"
+                },
+                {
+                    "name": "meta.macro.data.hyperbricks",
+                    "begin": "\\)\\s*\\{",
+                    "end": "\\}",
+                    "patterns": [
+                        {
+                            "name": "string.unquoted.macro.data.hyperbricks",
+                            "match": "[^\\n]+"
+                        }
+                    ]
+                }
+            ]
+        },
+        "hyperbricks_macro_template": {
+            "name": "meta.macro.template.hyperbricks",
+            "begin": "<<<\\[",
+            "beginCaptures": {
+                "0": {
+                    "name": "meta.macro.template.begin.hyperbricks"
+                }
+            },
+            "end": "\\]\\s*>>>",
+            "endCaptures": {
+                "0": {
+                    "name": "meta.macro.template.end.hyperbricks"
+                }
+            },
+            "contentName": "meta.macro.template.content.hyperbricks",
+            "patterns": [
+                {
+                    "name": "variable.other.macro.replacement.hyperbricks",
+                    "match": "\\{\\{\\{\\s*\\.[a-zA-Z0-9_]+\\s*\\}\\}\\}"
+                },
+                {
+                    "name": "variable.other.go.replacement.hyperbricks",
+                    "match": "\\{\\{\\s*\\.[a-zA-Z0-9_]+\\s*\\}\\}"
                 }
             ]
         },

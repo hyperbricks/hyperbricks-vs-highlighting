@@ -3,7 +3,7 @@
 	"main": "./dist/extension.js",
 	"displayName": "Hyperbricks",
 	"description": "Highlighting, formatting, and IntelliSense for .hyperbricks files",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "Robbert Streng",
 	"engines": {
 		"vscode": "^1.95.0"
@@ -261,6 +261,85 @@
 						"scope": "source.hyperbricks.inheritance",
 						"settings": {
 							"foreground": "#C586C0"
+						}
+					},
+					{
+						"scope": "keyword.control.macro.hyperbricks",
+						"settings": {
+							"foreground": "#C586C0",
+							"fontStyle": "bold"
+						}
+					},
+					{
+						"scope": "meta.macro.hyperbricks",
+						"settings": {
+							"foreground": "#a6d0ff"
+						}
+					},
+					{
+						"scope": "variable.parameter.macro.hyperbricks",
+						"settings": {
+							"foreground": "#2d8fff",
+							"fontStyle": "italic"
+						}
+					},
+					{
+						"scope": "meta.macro.template.hyperbricks",
+						"settings": {
+							"foreground": "#a7d5a7"
+						}
+					},
+					{
+						"scope": "meta.macro.template.content.hyperbricks",
+						"settings": {
+							"background": "#1b2030",
+							"foreground": "#b0e0e6"
+						}
+					},
+					{
+						"scope": "string.unquoted.macro.data.hyperbricks",
+						"settings": {
+							"foreground": "#cccccc"
+						}
+					},
+					{
+						"scope": "variable.other.macro.replacement.hyperbricks",
+						"settings": {
+							"foreground": "#FFD700",
+							"fontStyle": "bold"
+						}
+					},
+					{
+						"scope": "variable.other.go.replacement.hyperbricks",
+						"settings": {
+							"foreground": "#e3b666"
+						}
+					},
+					{
+						"scope": "variable.other.template.go.hyperbricks",
+						"settings": {
+							"foreground": "#d7ba7d",
+							"fontStyle": "bold"
+						}
+					},
+					{
+						"scope": "meta.macro.template.begin.hyperbricks",
+						"settings": {
+							"foreground": "#FFD700",
+							"fontStyle": "bold"
+						}
+					},
+					{
+						"scope": "meta.macro.template.end.hyperbricks",
+						"settings": {
+							"foreground": "#FFD700",
+							"fontStyle": "bold"
+						}
+					},
+					{
+						"scope": "meta.macro.template.content.hyperbricks",
+						"settings": {
+							"foreground": "#8ad7e1"
 						}
 					}
 				]
